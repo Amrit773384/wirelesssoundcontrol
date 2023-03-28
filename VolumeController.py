@@ -6,20 +6,20 @@ from comtypes import CLSCTX_ALL
 from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
 import numpy as np 
 
-cap = cv2.VideoCapture(1)
-
-mpHands = mp.solutions.hands 
-hands = mpHands.Hands()
-
-mpDraw = mp.solutions.drawing_utils
-devices = AudioUtilities.GetSpeakers()
-interface = devices.Activate(IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
-volume = cast(interface, POINTER(IAudioEndpointVolume))
-
-volMin,volMax = volume.GetVolumeRange()[:2]
 
 #main function , must be started from main.py
 def start_sound_control():
+    cap = cv2.VideoCapture(1)
+
+    mpHands = mp.solutions.hands 
+    hands = mpHands.Hands()
+
+    mpDraw = mp.solutions.drawing_utils
+    devices = AudioUtilities.GetSpeakers()
+    interface = devices.Activate(IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
+    volume = cast(interface, POINTER(IAudioEndpointVolume))
+
+    volMin,volMax = volume.GetVolumeRange()[:2]
     while True:
         success,img = cap.read()
         imgRGB = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
