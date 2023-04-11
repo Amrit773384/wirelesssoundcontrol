@@ -4,9 +4,11 @@ from keras.utils import to_categorical
 from keras.models import model_from_json
 from keras.layers import LSTM, Dense
 from keras.callbacks import TensorBoard
+import pyautogui
 
 
 def get_alpha_from_gesture():
+    prev = ''
     json_file = open("model.json", "r")
     model_json = json_file.read()
     json_file.close()
@@ -52,7 +54,6 @@ def get_alpha_from_gesture():
             frame=cv2.rectangle(frame,(0,40),(300,400),255,2)
             # frame=cv2.putText(frame,"Active Region",(75,25),cv2.FONT_HERSHEY_COMPLEX_SMALL,2,255,2)
             image, results = mediapipe_detection(cropframe, hands)
-            # print(results)
             
             # Draw landmarks
             # draw_styled_landmarks(image, results)
@@ -60,11 +61,12 @@ def get_alpha_from_gesture():
             keypoints = extract_keypoints(results)
             sequence.append(keypoints)
             sequence = sequence[-30:]
+            print(sequence)
 
             try: 
                 if len(sequence) == 30:
                     res = model.predict(np.expand_dims(sequence, axis=0))[0]
-                    print(actions[np.argmax(res)])
+                    print(res)
                     predictions.append(np.argmax(res))
                     
                     
@@ -101,3 +103,5 @@ def get_alpha_from_gesture():
                 break
         cap.release()
         cv2.destroyAllWindows()
+if __name__ =='__main__':
+    get_alpha_from_gesture()
